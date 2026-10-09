@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find your next favorite song by title, artist, genre, or mood.">
+  <title>Song Finder — Find your next favorite song</title>
+  <style>
+    :root{color-scheme:light;--ink:#211a35;--muted:#726c83;--purple:#6846c7;--violet:#8d70e8;--pink:#f3a6c8;--paper:#fff;--bg:#f6f3ff;--line:#e9e3f5}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}button,input,select{font:inherit}.wrap{width:min(1040px,calc(100% - 36px));margin-inline:auto}
+    header{padding:20px 0}.nav{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;font-size:1.35rem;color:var(--purple);text-decoration:none}.nav small{color:var(--muted)}
+    .hero{padding:45px 0 28px;text-align:center}.pill{display:inline-block;padding:5px 13px;border-radius:99px;background:#e9e1ff;color:var(--purple);font-weight:700;font-size:.85rem}.hero h1{font-size:clamp(2.4rem,7vw,4.8rem);line-height:1.12;letter-spacing:-.04em;margin:17px 0 10px}.hero p{max-width:560px;margin:0 auto;color:var(--muted)}
+    .searchbox{margin:28px auto 0;max-width:760px;background:var(--paper);padding:12px;border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 40px #41278012;display:flex;gap:10px}.searchbox input{flex:1;min-width:0;border:0;outline:0;padding:10px 12px;color:var(--ink)}.searchbox button,.reset{border:0;border-radius:12px;background:var(--purple);color:white;font-weight:750;padding:11px 20px;cursor:pointer}.searchbox button:hover{background:#5336ac}
+    .filters{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.filters select{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:white;color:var(--ink)}
+    main{padding:20px 0 65px}.results-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:22px 0 14px}.results-head h2{font-size:1.4rem;margin:0}.count{color:var(--muted);font-size:.95rem}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.song{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:18px;display:flex;gap:14px;align-items:center;min-width:0}.cover{width:58px;height:58px;flex:0 0 58px;border-radius:14px;background:linear-gradient(140deg,var(--violet),var(--pink));display:grid;place-items:center;color:white;font-size:1.5rem}.song h3{margin:0;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.song p{margin:3px 0 0;color:var(--muted);font-size:.9rem}.tag{display:inline-block;margin-top:7px;padding:2px 9px;border-radius:99px;background:#f1edfb;color:var(--purple);font-size:.75rem}.empty{grid-column:1/-1;background:white;border:1px dashed #c9bde5;border-radius:16px;padding:30px;text-align:center;color:var(--muted)}footer{text-align:center;color:var(--muted);padding:23px;font-size:.85rem}
+    @media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.wrap{width:calc(100% - 26px)}.nav small{display:none}.searchbox{border-radius:15px}.searchbox button{padding-inline:14px}.grid{grid-template-columns:1fr}.song{padding:14px}}
+  </style>
+</head>
+<body>
+  <header><nav class="wrap nav" aria-label="Main navigation"><a class="brand" href="#">♫ Song Finder</a><small>Find a song for every mood</small></nav></header>
+  <section class="hero wrap" aria-labelledby="title">
+    <span class="pill">A little music discovery</span>
+    <h1 id="title">What do you<br>want to hear today?</h1>
+    <p>Search by song title, artist, or genre, then find a track that fits the moment.</p>
+    <form class="searchbox" id="search-form" role="search"><label for="query" style="position:absolute;left:-9999px">Search song title or artist</label><input id="query" type="search" placeholder="Try a song title or Tilly Birds…" autocomplete="off"><button type="submit">Search songs</button></form>
+    <div class="filters"><label for="genre">Genre:</label><select id="genre"><option value="all">All genres</option><option value="ป๊อป">Pop</option><option value="อินดี้">Indie</option><option value="ร็อก">Rock</option><option value="อะคูสติก">Acoustic</option><option value="ฮิปฮอป">Hip-hop</option></select><label for="mood">Mood:</label><select id="mood"><option value="all">Any mood</option><option value="สดใส">Happy</option><option value="คิดถึง">Nostalgic</option><option value="ผ่อนคลาย">Relaxed</option><option value="มีพลัง">Energetic</option></select></div>
+  </section>
+  <main class="wrap"><div class="results-head"><h2>Recommended songs</h2><span id="count" class="count" aria-live="polite"></span></div><div id="results" class="grid" aria-live="polite"></div></main>
+  <footer>A song discovery demo · Song listings are sample data</footer>
+  <script>
+    const genres={"ป๊อป":"Pop","อินดี้":"Indie","ร็อก":"Rock","อะคูสติก":"Acoustic","ฮิปฮอป":"Hip-hop"};
+    const moods={"สดใส":"Happy","คิดถึง":"Nostalgic","ผ่อนคลาย":"Relaxed","มีพลัง":"Energetic"};
+    const songs=[
+      {title:"ถ้าเราเจอกันอีก",artist:"Tilly Birds",genre:"ป๊อป",mood:"คิดถึง"},
+      {title:"ฤดูที่แตกต่าง",artist:"Boyd Kosiyabong",genre:"ป๊อป",mood:"สดใส"},
+      {title:"ลาลาลอย (100%)",artist:"The TOYS",genre:"อินดี้",mood:"สดใส"},
+      {title:"แสงสุดท้าย",artist:"Bodyslam",genre:"ร็อก",mood:"มีพลัง"},
+      {title:"ดาว",artist:"Pause",genre:"อะคูสติก",mood:"คิดถึง"},
+      {title:"คิด(แต่ไม่)ถึง",artist:"Tilly Birds",genre:"อินดี้",mood:"คิดถึง"},
+      {title:"ฝนตกไหม",artist:"Three Man Down",genre:"ป๊อป",mood:"ผ่อนคลาย"},
+      {title:"ขอ",artist:"Lomosonic",genre:"ร็อก",mood:"มีพลัง"},
+      {title:"Sunroof",artist:"Nicky Youre, dazy",genre:"ป๊อป",mood:"สดใส"},
+      {title:"รักติดไซเรน",artist:"ไอซ์ พาริส & แพรวา",genre:"ป๊อป",mood:"สดใส"},
+      {title:"ก่อนฤดูฝน",artist:"The TOYS",genre:"ฮิปฮอป",mood:"ผ่อนคลาย"},
+      {title:"Best Part",artist:"Daniel Caesar ft. H.E.R.",genre:"อะคูสติก",mood:"ผ่อนคลาย"}
+    ];
+    const query=document.querySelector('#query'),genre=document.querySelector('#genre'),mood=document.querySelector('#mood'),results=document.querySelector('#results'),count=document.querySelector('#count');
+    function render(){const q=query.value.trim().toLocaleLowerCase();const found=songs.filter(s=>(!q||`${s.title} ${s.artist} ${genres[s.genre]} ${moods[s.mood]}`.toLocaleLowerCase().includes(q))&&(genre.value==='all'||s.genre===genre.value)&&(mood.value==='all'||s.mood===mood.value));count.textContent=`${found.length} ${found.length===1?'song':'songs'} found`;results.innerHTML=found.length?found.map(s=>`<article class="song"><div class="cover" aria-hidden="true">♫</div><div><h3>${s.title}</h3><p>${s.artist}</p><span class="tag">${genres[s.genre]} · ${moods[s.mood]}</span></div></article>`).join(''):'<p class="empty">No songs found. Try another search or filter.</p>';}
+    document.querySelector('#search-form').addEventListener('submit',e=>{e.preventDefault();render()});query.addEventListener('input',render);genre.addEventListener('change',render);mood.addEventListener('change',render);render();
+  </script>
+</body>
+</html>
